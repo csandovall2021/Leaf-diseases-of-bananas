@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitoApp - Diagnóstico de Plantas</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .upload-area {
+            border: 3px dashed #3498db;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #2980b9;
+            background: #ecf0f1;
+        }
+        
+        .upload-area.dragover {
+            border-color: #27ae60;
+            background: #d5f4e6;
+        }
+        
+        input[type="file"] {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+        
+        .result.sano {
+            background: #d5f4e6;
+            border: 2px solid #27ae60;
+            color: #27ae60;
+        }
+        
+        .result.enfermo {
+            background: #fadbd8;
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .result.error {
+            background: #fdeaa7;
+            border: 2px solid #f39c12;
+            color: #f39c12;
+        }
+        
+        .preview {
+            max-width: 300px;
+            max-height: 300px;
+            margin: 20px auto;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 FitoApp - Diagnóstico de Plantas</h1>
+        
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="upload-area" id="uploadArea">
+                <h3>📷 Sube una foto de tu planta</h3>
+                <p>Arrastra y suelta una imagen aquí o haz clic para seleccionar</p>
+                <input type="file" id="fileInput" name="file" accept="image/*" required>
+            </div>
+            
+            <img id="preview" class="preview" alt="Vista previa">
+            
+            <div style="text-align: center;">
+                <button type="submit" id="submitBtn">🔍 Analizar Planta</button>
+                <button type="button" id="clearBtn">🗑️ Limpiar</button>
+            </div>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analizando tu planta...</p>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById("uploadArea");
+        const fileInput = document.getElementById("fileInput");
+        const preview = document.getElementById("preview");
+        const form = document.getElementById("uploadForm");
+        const result = document.getElementById("result");
+        const loading = document.getElementById("loading");
+        const submitBtn = document.getElementById("submitBtn");
+        const clearBtn = document.getElementById("clearBtn");
+
+        // Manejo de drag and drop
+        uploadArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            uploadArea.classList.add("dragover");
+        });
+
+        uploadArea.addEventListener("dragleave", () => {
+            uploadArea.classList.remove("dragover");
+        });
+
+        uploadArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove("dragover");
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                previewImage(files[0]);
+            }
+        });
+
+        // Click en el área de upload
+        uploadArea.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        // Vista previa de imagen
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                previewImage(file);
+            }
+        });
+
+        function previewImage(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Envío del formulario
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            
+            // Mostrar loading
+            loading.style.display = "block";
+            submitBtn.disabled = true;
+            result.innerHTML = "";
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/upload", {
+                method: "POST",
+                body: formData
+            } );
+
+                const data = await response.json();
+                
+                loading.style.display = "none";
+                submitBtn.disabled = false;
+
+                if (response.ok) {
+                    showResult(data);
+                } else {
+                    showError(data.error || "Error desconocido");
+                }
+            } catch (error) {
+                loading.style.display = "none";
+                submitBtn.disabled = false;
+                showError("Error de conexión: " + error.message);
+            }
+        });
+
+        function showResult(data) {
+            const className = data.result.toLowerCase();
+            const emoji = className === "healthy" ? "✅" : "⚠️"; // Asumiendo que 'healthy' es la clase para sano
+            
+            result.innerHTML = `
+                <div class="result ${className}">
+                    <h3>${emoji} Resultado: ${data.result}</h3>
+                    <p><strong>Confianza:</strong> ${(data.confidence * 100).toFixed(2)}%</p>
+                    <p>${data.interpretation}</p>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            result.innerHTML = `
+                <div class="result error">
+                    <h3>❌ Error</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Limpiar formulario
+        clearBtn.addEventListener("click", () => {
+            form.reset();
+            preview.style.display = "none";
+            result.innerHTML = "";
+            loading.style.display = "none";
+            submitBtn.disabled = false;
+        });
+    </script>
+</body>
+</html>

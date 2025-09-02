@@ -1,0 +1,20 @@
+REPORTE DE CLASIFICACIÓN - ENFERMEDADES DEL BANANO
+============================================================
+Precisión de validación: 0.4544
+
+                 precision    recall  f1-score   support
+
+ black_sigatoka     0.2000    0.0215    0.0388        93
+    bract_virus     0.0000    0.0000    0.0000        70
+        cordana     0.7273    0.1000    0.1758        80
+        healthy     0.6347    0.5300    0.5777       200
+    insect_pest     0.6122    0.7500    0.6742       120
+   moko_disease     0.0000    0.0000    0.0000        77
+ panama_disease     0.2512    0.8947    0.3923        57
+ pestalotiopsis     0.3758    0.7000    0.4891        80
+       sigatoka     0.5268    0.7375    0.6146        80
+yellow_sigatoka     0.4638    1.0000    0.6337        32
+
+       accuracy                         0.4544       889
+      macro avg     0.3792    0.4734    0.3596       889
+   weighted avg     0.4258    0.4544    0.3881       889

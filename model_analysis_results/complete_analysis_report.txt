@@ -1,0 +1,55 @@
+ANÁLISIS COMPLETO DEL MODELO DE CLASIFICACIÓN DE ENFERMEDADES DEL BANANO
+================================================================================
+
+1. INFORMACIÓN DEL DATASET
+------------------------------
+Total de clases: 10
+Total de imágenes: 4469
+Imágenes de entrenamiento: 3578
+Imágenes de validación: 891
+
+Distribución por clase:
+  - black_sigatoka: 469 imágenes totales
+  - bract_virus: 350 imágenes totales
+  - cordana: 400 imágenes totales
+  - healthy: 1002 imágenes totales
+  - insect_pest: 602 imágenes totales
+  - moko_disease: 385 imágenes totales
+  - panama_disease: 287 imágenes totales
+  - pestalotiopsis: 400 imágenes totales
+  - sigatoka: 400 imágenes totales
+  - yellow_sigatoka: 174 imágenes totales
+
+2. MÉTRICAS GLOBALES DEL MODELO
+-----------------------------------
+Pérdida de validación: 0.2871
+Precisión de validación: 0.9046 (90.46%)
+Top-3 Accuracy: 0.9978 (99.78%)
+
+3. MÉTRICAS POR CLASE
+----------------------
+Clase              Precisión  Recall     F1-Score   Soporte   
+----------------------------------------------------------------------
+black_sigatoka     0.7719     0.9462     0.8502     93        
+bract_virus        1.0000     0.9429     0.9706     70        
+cordana            0.8421     1.0000     0.9143     80        
+healthy            0.9300     0.9300     0.9300     200       
+insect_pest        0.9469     0.8917     0.9185     120       
+moko_disease       0.9615     0.9740     0.9677     77        
+panama_disease     0.9592     0.8246     0.8868     57        
+pestalotiopsis     0.7917     0.7125     0.7500     80        
+sigatoka           0.9500     0.9500     0.9500     80        
+yellow_sigatoka    1.0000     0.7059     0.8276     34        
+----------------------------------------------------------------------
+Macro avg          0.9153     0.8878     0.8966     891       
+Weighted avg       0.9100     0.9046     0.9041     891       
+
+4. ARCHIVOS GENERADOS
+--------------------
+- dataset_distribution.png/pdf: Distribución del dataset
+- confusion_matrix.png/pdf: Matriz de confusión
+- metrics_by_class.png/pdf: Métricas por clase
+- precision_recall_curves.png/pdf: Curvas Precision-Recall
+- roc_curves.png/pdf: Curvas ROC
+- metrics_by_class.csv: Datos de métricas en CSV
+- complete_analysis_report.txt: Este reporte
