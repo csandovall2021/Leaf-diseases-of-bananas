@@ -1,0 +1,22 @@
+ANÁLISIS DE RENDIMIENTO DEL MODELO
+============================================================
+
+CONFIGURACIÓN:
+Modelo: C:/wamp/www/FitoApp/modelos/banana_disease_model_transfer_learning.h5
+Dataset: C:/wamp/www/FitoApp/BananaLSD/AugmentedSet
+
+MÉTRICAS DE RENDIMIENTO:
+------------------------------
+Tamaño del modelo: 10.86 MB
+Tiempo de inferencia (promedio): 82.16 ± 2.89 ms
+Memoria RAM utilizada: 15.10 MB
+
+THROUGHPUT (imágenes/segundo):
+------------------------------
+  Batch size 1: 11.89 img/s
+  Batch size 8: 45.22 img/s
+  Batch size 16: 53.74 img/s
+  Batch size 32: 55.53 img/s
+
+Rendimiento en CPU: Procesamiento individual a 11.89 img/s
+Rendimiento máximo: 55.53 img/s con batch=32
